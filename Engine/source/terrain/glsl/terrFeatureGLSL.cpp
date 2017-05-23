@@ -70,7 +70,7 @@ MODULE_END;
 
 
 TerrainFeatGLSL::TerrainFeatGLSL()
-   : mTorqueDep( "shaders/common/gl/torque.glsl" )
+   : mTorqueDep(String(Con::getVariable("$Core::CommonShaderPath")) + String("/gl/torque.glsl" ))
    {      
    addDependency( &mTorqueDep );
    }
@@ -297,8 +297,8 @@ U32 TerrainBaseMapFeatGLSL::getOutputTargets( const MaterialFeatureData &fd ) co
 }
 
 TerrainDetailMapFeatGLSL::TerrainDetailMapFeatGLSL()
-   :  mTorqueDep( "shaders/common/gl/torque.glsl" ),
-      mTerrainDep( "shaders/common/terrain/terrain.glsl" )
+   :  mTorqueDep(String(Con::getVariable("$Core::CommonShaderPath")) + String("/gl/torque.glsl" )),
+      mTerrainDep(String(Con::getVariable("$Core::CommonShaderPath")) + String("/terrain/terrain.glsl" ))
       
 {
    addDependency( &mTorqueDep );
@@ -667,8 +667,8 @@ U32 TerrainDetailMapFeatGLSL::getOutputTargets( const MaterialFeatureData &fd ) 
 
 
 TerrainMacroMapFeatGLSL::TerrainMacroMapFeatGLSL()
-   :  mTorqueDep( "shaders/common/gl/torque.glsl" ),
-      mTerrainDep( "shaders/common/terrain/terrain.glsl" )
+   :  mTorqueDep(String(Con::getVariable("$Core::CommonShaderPath")) + String("/gl/torque.glsl" )),
+      mTerrainDep(String(Con::getVariable("$Core::CommonShaderPath")) + String("/terrain/terrain.glsl" ))
       
 {
    addDependency( &mTorqueDep );
@@ -911,8 +911,8 @@ U32 TerrainMacroMapFeatGLSL::getOutputTargets( const MaterialFeatureData &fd ) c
 void TerrainNormalMapFeatGLSL::processVert(  Vector<ShaderComponent*> &componentList, 
                                              const MaterialFeatureData &fd )
 {
-   // We only need to process normals during the prepass.
-   if ( !fd.features.hasFeature( MFT_PrePassConditioner ) )
+   // We only need to process normals during the deferred.
+   if ( !fd.features.hasFeature( MFT_DeferredConditioner ) )
       return;
 
    MultiLine *meta = new MultiLine;
@@ -933,7 +933,7 @@ void TerrainNormalMapFeatGLSL::processPix(   Vector<ShaderComponent*> &component
    Var *viewToTangent = getInViewToTangent( componentList );
 
    // This var is read from GBufferConditionerGLSL and 
-   // used in the prepass output.
+   // used in the deferred output.
    Var *gbNormal = (Var*)LangElement::find( "gbNormal" );
    if ( !gbNormal )
    {
@@ -1004,8 +1004,8 @@ ShaderFeature::Resources TerrainNormalMapFeatGLSL::getResources( const MaterialF
 {
    Resources res;
 
-   // We only need to process normals during the prepass.
-   if ( fd.features.hasFeature( MFT_PrePassConditioner ) )
+   // We only need to process normals during the deferred.
+   if ( fd.features.hasFeature( MFT_DeferredConditioner ) )
    {
       // If this is the first normal map and there
       // are no parallax features then we will 

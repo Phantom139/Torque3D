@@ -236,7 +236,7 @@ void BumpFeatGLSL::setTexData(   Material::StageData &stageDat,
 
 
 ParallaxFeatGLSL::ParallaxFeatGLSL()
-   : mIncludeDep( "shaders/common/gl/torque.glsl" )
+   : mIncludeDep(String(Con::getVariable("$Core::CommonShaderPath")) + String("/gl/torque.glsl" ))
 {
    addDependency( &mIncludeDep );
 }
@@ -365,9 +365,9 @@ ShaderFeature::Resources ParallaxFeatGLSL::getResources( const MaterialFeatureDa
    // We add the outViewTS to the outputstructure.
    res.numTexReg = 1;
 	
-   // If this isn't a prepass then we will be
+   // If this isn't a deferred then we will be
    // creating the normal map here.
-   if ( !fd.features.hasFeature( MFT_PrePassConditioner ) )
+   if ( !fd.features.hasFeature( MFT_DeferredConditioner ) )
       res.numTex = 1;
 	
    return res;

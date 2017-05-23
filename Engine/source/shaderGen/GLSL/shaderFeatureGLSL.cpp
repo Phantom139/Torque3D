@@ -830,7 +830,7 @@ Var* ShaderFeatureGLSL::addOutDetailTexCoord(   Vector<ShaderComponent*> &compon
 //****************************************************************************
 
 DiffuseMapFeatGLSL::DiffuseMapFeatGLSL()
-: mTorqueDep("shaders/common/gl/torque.glsl")
+: mTorqueDep(String(Con::getVariable("$Core::CommonShaderPath")) + String("/gl/torque.glsl"))
 {
 	addDependency(&mTorqueDep);
 }
@@ -953,7 +953,7 @@ void DiffuseMapFeatGLSL::processPix(   Vector<ShaderComponent*> &componentList,
       // To dump out UV coords...
       //#define DEBUG_ATLASED_UV_COORDS
 #ifdef DEBUG_ATLASED_UV_COORDS
-      if(!fd.features[MFT_PrePassConditioner])
+      if(!fd.features[MFT_DeferredConditioner])
       {
          meta->addStatement(new GenOp("   @ = vec4(@.xy, mipLod / @.w, 1.0);\r\n", new DecOp(diffColor), inTex, atParams));
          meta->addStatement(new GenOp("   @; return OUT;\r\n", assignColor(diffColor, Material::Mul, NULL, targ) ) );
@@ -1269,7 +1269,7 @@ void LightmapFeatGLSL::processPix(  Vector<ShaderComponent*> &componentList,
          bool bPreProcessedLighting = false;
          AdvancedLightBinManager *lightBin;
          if ( Sim::findObject( "AL_LightBinMgr", lightBin ) )
-            bPreProcessedLighting = lightBin->MRTLightmapsDuringPrePass();
+            bPreProcessedLighting = lightBin->MRTLightmapsDuringDeferred();
 
          // Lightmap has already been included in the advanced light bin, so
          // no need to do any sampling or anything
@@ -1394,7 +1394,7 @@ void TonemapFeatGLSL::processPix(  Vector<ShaderComponent*> &componentList,
    bool bPreProcessedLighting = false;
    AdvancedLightBinManager *lightBin;
    if ( Sim::findObject( "AL_LightBinMgr", lightBin ) )
-      bPreProcessedLighting = lightBin->MRTLightmapsDuringPrePass();
+      bPreProcessedLighting = lightBin->MRTLightmapsDuringDeferred();
    
    // Add in the realtime lighting contribution
    if ( fd.features[MFT_RTLighting] )
@@ -1549,7 +1549,7 @@ void VertLitGLSL::processPix(   Vector<ShaderComponent*> &componentList,
          bool bPreProcessedLighting = false;
          AdvancedLightBinManager *lightBin;
          if ( Sim::findObject( "AL_LightBinMgr", lightBin ) )
-            bPreProcessedLighting = lightBin->MRTLightmapsDuringPrePass();
+            bPreProcessedLighting = lightBin->MRTLightmapsDuringDeferred();
          
          // Assign value in d_lightcolor to toneMapColor if it exists. This is
          // the dynamic light buffer, and it already has the baked-vertex-color 
@@ -1975,7 +1975,7 @@ void ReflectCubeFeatGLSL::setTexData(  Material::StageData &stageDat,
 //****************************************************************************
 
 RTLightingFeatGLSL::RTLightingFeatGLSL()
-   : mDep( "shaders/common/gl/lighting.glsl" )
+   : mDep(String(Con::getVariable("$Core::CommonShaderPath")) + String("/gl/lighting.glsl" ))
 {
    addDependency( &mDep );
 }
@@ -2190,7 +2190,7 @@ ShaderFeature::Resources RTLightingFeatGLSL::getResources( const MaterialFeature
 //****************************************************************************
 
 FogFeatGLSL::FogFeatGLSL()
-   : mFogDep( "shaders/common/gl/torque.glsl" )
+   : mFogDep(String(Con::getVariable("$Core::CommonShaderPath")) + String("/gl/torque.glsl" ))
 {
    addDependency( &mFogDep );
 }
@@ -2321,7 +2321,7 @@ ShaderFeature::Resources FogFeatGLSL::getResources( const MaterialFeatureData &f
 //****************************************************************************
 
 VisibilityFeatGLSL::VisibilityFeatGLSL()
-   : mTorqueDep( "shaders/common/gl/torque.glsl" )
+   : mTorqueDep(String(Con::getVariable("$Core::CommonShaderPath")) + String("/gl/torque.glsl" ))
 {
    addDependency( &mTorqueDep );
 }
@@ -2487,7 +2487,7 @@ void RenderTargetZeroGLSL::processPix( Vector<ShaderComponent*> &componentList, 
 //****************************************************************************
 
 HDROutGLSL::HDROutGLSL()
-   : mTorqueDep( "shaders/common/gl/torque.glsl" )
+   : mTorqueDep(String(Con::getVariable("$Core::CommonShaderPath")) + String("/gl/torque.glsl" ))
 {
    addDependency( &mTorqueDep );
 }
@@ -2508,7 +2508,7 @@ void HDROutGLSL::processPix(  Vector<ShaderComponent*> &componentList,
 #include "T3D/fx/groundCover.h"
 
 FoliageFeatureGLSL::FoliageFeatureGLSL()
-: mDep( "shaders/common/gl/foliage.glsl" )
+: mDep(String(Con::getVariable("$Core::CommonShaderPath")) + String("/gl/foliage.glsl" ))
 {
    addDependency( &mDep );
 }
@@ -2654,7 +2654,7 @@ void ParticleNormalFeatureGLSL::processVert(Vector<ShaderComponent*> &componentL
 //****************************************************************************
 
 ImposterVertFeatureGLSL::ImposterVertFeatureGLSL()
-   :  mDep( "shaders/common/gl/imposter.glsl" )
+   :  mDep(String(Con::getVariable("$Core::CommonShaderPath")) + String("/gl/imposter.glsl" ))
 {
    addDependency( &mDep );
 }
